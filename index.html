@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>高雄市托育嬰服務查詢</title>
+	<link rel="stylesheet" href="./assets/stylesheets/layout.css">
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="./assets/javascripts/vue.js"></script>
+	<!-- Google Map API key -->
+	<!-- 
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI&callback=initMap">
+	</script>
+	-->
+	<!-- callback&async&defer 難掌握 因此從上面那個變成下面這個 -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI"></script>
+
+	<!-- Google Map -->
+	<script type="text/javascript">
+		var map;
+		var marker;
+		var markers = [];
+		var infowindow;
+
+		function initMap() {
+			var kaohsiung = {
+				lat: 22.665768464,
+				lng: 120.32489392799998
+			}
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 10,
+				center: kaohsiung
+			});
+			infowindow = new google.maps.InfoWindow({
+				content: ''
+			});
+			resetMarkers(map, nurserysList.$data.items);
+		}
+
+		function resetMarkers(whichMap, data) {
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(null);
+			}
+			markers = [];
+			console.log('clean all markers');
+			for (var i in data) {
+				var place = data[i];
+				marker = new google.maps.Marker({
+					title: place.org_Text,
+					position: {
+						lat: Number(place['lat']),
+						lng: Number(place['lng'])
+					}
+				});
+				marker.set("id", place.id);
+				markers.push(marker);
+				marker.setMap(whichMap)
+			}
+			console.log("set markers to " + JSON.stringify(data) + " completed!");
+		}
+		google.maps.event.addDomListener(window, "load", initMap);
+	</script>
+
+</head>
+
+<body>
+	<div class="header">
+		<a href="#">
+			<div class="header-title">高雄市托育嬰服務查詢</div>
+		</a>
+	</div>
+	<div class="wrap">
+		<div class="left-container">
+			<div id="nurserysList">
+				<div class="select-block">
+					<label>選擇地區:</label>
+					<select class="area-select" name="currentArea" v-model="currentArea" v-on:change="rePanMapTo(currentArea)">
+						<option class="area-options">全部地區</option>
+						<option class="area-options" v-for="area in areas">
+							{{area}}
+						</option>
+					</select>
+					<br>
+					<label>週末服務:</label>
+					<label>
+						{{ weekendService ? '有' : '無' }}
+						<input type="checkbox" v-model="weekendService">
+					</label>
+				</div>
+				<div class="nursery-block">
+					<a href="#">
+						<div v-for="item in matchRulesNurserys" class="nursery" v-on:mouseover="markerAnimation(item.id)" v-on:mouseout="stopMarkerAnimation(item.id)" v-on:click="reOpenInfowindow(item.id)">
+							<table>
+								<caption>{{item.org_Text}}</caption>
+								<tbody>
+									<tr>
+										<td>服務時間:</td>
+										<td>{{item.servTime}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="right-container">
+			<div id="vmap">
+				<div id="map"></div>
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		Copyright © 2016 史卯郁 楊竑昕 All rights reserved.
+	</div>
+
+	<!-- Vue.js -->
+	<script type="text/javascript">
+		var vmap = new Vue({
+			el: '#vmap',
+			data: {
+				currentArea: '全部地區',
+				weekendService: false,
+				matchRulesNurserys: []
+			},
+			watch: {
+				'matchRulesNurserys': function (where) {
+					resetMarkers(map, where);
+				}
+			},
+			methods: {
+				areaFilter: function () {
+					nurserysInThisArea = [];
+					console.log("currentArea = " + this.currentArea);
+					for (var nursery in nurserysList.$data.items) {
+						if (this.currentArea == nurserysList.$data.items[nursery].area) {
+							nurserysInThisArea.push(nurserysList.$data.items[nursery]);
+						} else if (this.currentArea == '全部地區') {
+							nurserysInThisArea.push(nurserysList.$data.items[nursery]);
+						}
+					}
+					console.log("nurserys match currentArea conditionin this area = " + JSON.stringify(nurserysInThisArea));
+				},
+				timeFilter: function () {
+					nurserysHaveWeekendService = [];
+					console.log("weekendService = " + this.weekendService);
+					for (var nursery in nurserysList.$data.items) {
+						if (this.weekendService == false) {
+							nurserysHaveWeekendService.push(nurserysList.$data.items[nursery]);
+						} else if (this.weekendService == nurserysList.$data.items[nursery].weekendService) {
+							nurserysHaveWeekendService.push(nurserysList.$data.items[nursery]);
+						}
+					}
+					console.log("nurserys match weekendService condition = " + JSON.stringify(nurserysHaveWeekendService));
+				},
+				setMatchRulesNurserys: function () {
+					matchRulesNurserys = [];
+					for (var i in nurserysHaveWeekendService) {
+						for (var j in nurserysInThisArea) {
+							if (nurserysHaveWeekendService[i] == nurserysInThisArea[j]) {
+								matchRulesNurserys.push(nurserysHaveWeekendService[i]);
+							}
+						}
+					}
+					console.log("nurserys match all condition = " + JSON.stringify(matchRulesNurserys));
+				},
+			}
+		});
+	</script>
+	<!-- Vue.js -->
+	<script type="text/javascript">
+		var apiURL = 'http://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AE&CaseNo2=2&FileType=1&Lang=C&FolderType=';
+		var apiURL2 = 'http://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AE&CaseNo2=1&FileType=1&Lang=C&FolderType=';
+		var nurserysInThisArea;
+		var nurserysHaveWeekendService;
+		//				var matchRulesNurserys;
+		var nurserysList = new Vue({
+			el: '#nurserysList',
+			data: {
+				currentArea: '全部地區',
+				weekendService: false,
+				items: [],
+				areas: [],
+				matchRulesNurserys: []
+			},
+			created: function () {
+				this.fetchData();
+				this.matchRulesNurserys = this.items;
+			},
+			watch: {
+				'currentArea': function (where) {
+					this.areaFilter();
+					this.timeFilter();
+					this.setMatchRulesNurserys();
+					vmap.$data.currentArea = where;
+				},
+				'weekendService': function (boolean) {
+					this.areaFilter();
+					this.timeFilter();
+					this.setMatchRulesNurserys();
+					vmap.$data.weekendService = boolean;
+				},
+				'matchRulesNurserys': function (val) {
+					vmap.$data.matchRulesNurserys = val;
+				}
+
+			},
+			methods: {
+				fetchData: function () {
+					var self = this;
+					$.ajax({
+						type: 'GET',
+						url: apiURL,
+						async: false,
+						success: function (data) {
+							var thisData = JSON.parse(data);
+							for (var i in thisData) {
+								self.items.push(thisData[i]);
+							}
+						}
+					});
+					$.ajax({
+						type: 'GET',
+						url: apiURL2,
+						async: false,
+						success: function (data) {
+							var thisData = JSON.parse(data);
+							for (var i in thisData) {
+								self.items.push(thisData[i]);
+							}
+						}
+					});
+					var areaGroup = {};
+					for (var i in self.items) {
+						self.items[i].area = self.items[i].informaddress.substr(3, 3);
+						self.items[i].weekendService = false;
+						if (self.items[i].servTime.search("六") != -1) {
+							self.items[i].weekendService = true;
+						}
+						var key = self.items[i].area;
+						areaGroup[key] = areaGroup[key] || (areaGroup[key] = []);
+						areaGroup[key].push(self.items[i].org_Text);
+					}
+					self.areas = Object.keys(areaGroup);
+				},
+				markerAnimation: function (id) {
+					for (var i in markers) {
+						if (markers[i].id == id) {
+							markers[i].setAnimation(google.maps.Animation.BOUNCE);
+						}
+					}
+				},
+				stopMarkerAnimation: function (id) {
+					for (var i in markers) {
+						if (markers[i].id == id) {
+							markers[i].setAnimation(null);
+						}
+					}
+				},
+				reOpenInfowindow: function (id) {
+					infowindow.close();
+					for (var i in this.items) {
+						if (this.items[i].id == id) {
+							infowindow.setContent(
+								'<p>' + this.items[i].org_Text + '</p>' + '<p>' + this.items[i].informaddress + '</p>'
+							);
+						}
+					}
+					for (var i in markers) {
+						if (markers[i].id == id) {
+							infowindow.open(map, markers[i]);
+						}
+					}
+				},
+				rePanMapTo: function (where) {
+					var sumOfLat = 0;
+					var sumOfLng = 0;
+					var count = 0;
+					if (this.currentArea == '全部地區') {
+						map.setZoom(11);
+						for (var i in this.items) {
+								sumOfLat += Number(this.items[i].lat);
+								sumOfLng += Number(this.items[i].lng);
+								count++;
+						}
+					} else {
+						map.setZoom(14);
+						for (var i in this.items) {
+							if (this.items[i].area == where) {
+								sumOfLat += Number(this.items[i].lat);
+								sumOfLng += Number(this.items[i].lng);
+								count++;
+							}
+						}
+					}
+
+					var panToWhere = {
+						lat: sumOfLat / count,
+						lng: sumOfLng / count
+					}
+					map.panTo(panToWhere);
+
+					console.log("Map pan to " + JSON.stringify(panToWhere) + " completed!");
+				},
+				areaFilter: function () {
+					nurserysInThisArea = [];
+					console.log("currentArea = " + this.currentArea);
+					for (var nursery in this.items) {
+						if (this.currentArea == this.items[nursery].area) {
+							nurserysInThisArea.push(this.items[nursery]);
+						} else if (this.currentArea == '全部地區') {
+							nurserysInThisArea.push(this.items[nursery]);
+						}
+					}
+					console.log("nurserys match currentArea conditionin this area = " + JSON.stringify(nurserysInThisArea));
+				},
+				timeFilter: function () {
+					nurserysHaveWeekendService = [];
+					console.log("weekendService = " + this.weekendService);
+					for (var nursery in this.items) {
+						if (this.weekendService == false) {
+							nurserysHaveWeekendService.push(this.items[nursery]);
+						} else if (this.weekendService == this.items[nursery].weekendService) {
+							nurserysHaveWeekendService.push(this.items[nursery]);
+						}
+					}
+					console.log("nurserys match weekendService condition = " + JSON.stringify(nurserysHaveWeekendService));
+				},
+				setMatchRulesNurserys: function () {
+					this.matchRulesNurserys = [];
+					for (var i in nurserysInThisArea) {
+						for (var j in nurserysHaveWeekendService) {
+							if (nurserysInThisArea[i].id == nurserysHaveWeekendService[j].id) {
+								this.matchRulesNurserys.push(nurserysInThisArea[i]);
+							}
+						}
+					}
+					console.log("nurserys match all condition = " + JSON.stringify(this.matchRulesNurserys));
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>
