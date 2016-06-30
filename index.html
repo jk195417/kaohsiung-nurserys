@@ -2,19 +2,29 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>高雄市托育嬰服務查詢</title>
-	<link rel="stylesheet" href="./assets/stylesheets/layout.css">
+	
+	<!-- 思源字體 -->
+	<link rel="stylesheet" href="./assets/stylesheets/notosanstc.css">
+	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="./assets/javascripts/vue.js"></script>
-	<!-- Google Map API key -->
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<!-- Bootstrap JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	<!-- 
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI&callback=initMap">
 	</script>
 	-->
 	<!-- callback&async&defer 難掌握 因此從上面那個變成下面這個 -->
+	<!-- Google Map API key -->
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI"></script>
-
+	<!-- css -->
+	<link rel="stylesheet" href="./assets/stylesheets/layout.css">
 	<!-- Google Map -->
 	<script type="text/javascript">
 		var map;
@@ -69,23 +79,26 @@
 			<div class="header-title">高雄市托育嬰服務查詢</div>
 		</a>
 	</div>
-	<div class="wrap">
+	<div class="wrap container">
 		<div class="left-container">
 			<div id="nurserysList">
 				<div class="select-block">
-					<label>選擇地區:</label>
-					<select class="area-select" name="currentArea" v-model="currentArea" v-on:change="rePanMapTo(currentArea)">
-						<option class="area-options">全部地區</option>
-						<option class="area-options" v-for="area in areas">
-							{{area}}
-						</option>
-					</select>
-					<br>
-					<label>週末服務:</label>
-					<label>
-						{{ weekendService ? '有' : '無' }}
-						<input type="checkbox" v-model="weekendService">
-					</label>
+					<div class="filter">
+						<label>選擇地區:</label>
+						<select class="area-select" name="currentArea" v-model="currentArea" v-on:change="rePanMapTo(currentArea)">
+							<option class="area-options">全部地區</option>
+							<option class="area-options" v-for="area in areas">
+								{{area}}
+							</option>
+						</select>
+					</div>
+					<div class="filter">
+						<label>週末服務:</label>
+						<label>
+							{{ weekendService ? '有' : '無' }}
+							<input type="checkbox" v-model="weekendService">
+						</label>
+					</div>
 				</div>
 				<div class="nursery-block">
 					<a href="#">
@@ -279,9 +292,9 @@
 					if (this.currentArea == '全部地區') {
 						map.setZoom(11);
 						for (var i in this.items) {
-								sumOfLat += Number(this.items[i].lat);
-								sumOfLng += Number(this.items[i].lng);
-								count++;
+							sumOfLat += Number(this.items[i].lat);
+							sumOfLng += Number(this.items[i].lng);
+							count++;
 						}
 					} else {
 						map.setZoom(14);
