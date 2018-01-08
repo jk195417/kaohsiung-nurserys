@@ -1,0 +1,17 @@
+{
+  "name": "kaohsiung-nurserys",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/jk195417/kaohsiung-nurserys.git",
+  "author": "楊竑昕 <jk195417@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "node-sass": "^4.7.2",
+    "parcel-bundler": "^1.4.1"
+  },
+  "dependencies": {
+    "bootstrap": "^4.0.0-beta.3",
+    "jquery": "^3.2.1",
+    "popper.js": "^1.12.9"
+  }
+}
