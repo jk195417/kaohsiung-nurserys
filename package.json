@@ -14,5 +14,8 @@
     "jquery": "^3.2.1",
     "popper.js": "^1.12.9",
     "vue": "^2.5.13"
+  },
+  "scripts": {
+    "start": "yarn install && parcel src/index.html"
   }
 }
