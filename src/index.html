@@ -6,16 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>高雄市托育嬰服務查詢</title>
-  <script src="./index.js" charset="utf-8" defer></script>
-  <!-- Google Map API key -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI"></script>
+  <script src="./index.js" defer charset="utf-8"></script>
+  <!-- google map -->
+  <script defer charset="utf-8" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI&callback=initMap"></script>
 </head>
 
 <body>
   <nav></nav>
   <main>
-    <div id="nurserys"></div>
-    <div id="map"></div>
+    <div class="row">
+      <div class="col">
+        <div id="app"></div>
+      </div>
+      <div class="col-8">
+        <div class="embed-responsive embed-responsive-4by3">
+          <div id="map" class="embed-responsive-item"></div>
+        </div>
+      </div>
+    </div>
   </main>
 </body>
 

@@ -9,5 +9,14 @@ import './css/index.scss'
 
 // js code
 // google map
-
+window.initMap = function() {
+  const kaohsiung = {
+    lat: 22.665768464,
+    lng: 120.32489392799998
+  }
+  new google.maps.Map(document.getElementById('map'), {
+    zoom: 11,
+    center: kaohsiung
+  })
+}
 // vue
