@@ -16,20 +16,34 @@
     <span class="navbar-brand mb-0 h1">高雄市托育嬰服務查詢</span>
   </nav>
   <main>
-    <div class="row">
-      <div class="col">
-        <div id="app"></div>
-      </div>
-      <div class="col-8">
-        <div class="embed-responsive embed-responsive-4by3">
-          <div id="map" class="embed-responsive-item"></div>
-        </div>
-      </div>
-    </div>
+    <div id="app"></div>
   </main>
+  <div class="embed-responsive embed-responsive-1by1">
+    <div id="map" class="embed-responsive-item"></div>
+  </div>
   <footer class="bg-light text-center">
     Copyright © 2017 史卯郁 楊竑昕 All rights reserved.
   </footer>
 </body>
+
+<template id="nurserys">
+  <div>
+    <form>
+      <div class="form-group">
+        <label>行政區</label>
+        <select class="form-control">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+    </form>
+    <nursery v-for="nursery in nurserys"></nursery>
+  </div>
+</template>
+<template id="nursery">
+</template>
 
 </html>

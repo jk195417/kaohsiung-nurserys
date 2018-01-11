@@ -20,3 +20,37 @@ window.initMap = function() {
   })
 }
 // vue
+import nursery from './js/nursery.js'
+const app = new Vue({
+  el: "#app",
+  template: "#nurserys",
+  data: {
+    nurserys: [],
+    district: '',
+  },
+  components: {
+    nursery: nursery
+  },
+  methods: {
+    fetchNurserys: function(url) {
+      var self = this
+      $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(data) {
+          let nurserys = JSON.parse(data);
+          nurserys.forEach((nursery) => {
+            self.nurserys.push(nursery)
+          })
+        }
+      })
+    }
+  },
+  created: function() {
+    this.fetchNurserys('https://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AE&CaseNo2=2&FileType=1&Lang=C&FolderType=')
+    this.fetchNurserys('https://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AE&CaseNo2=1&FileType=1&Lang=C&FolderType=')
+  },
+  mounted: function() {
+
+  }
+})
