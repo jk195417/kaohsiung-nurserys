@@ -1,8 +1,18 @@
 export default {
   template: '#nursery',
-  data: function() {
-    return {
-
-    }
-  },
+  props: [
+    "district",
+    "dataOrg",
+    "doOrg",
+    "frg_Id",
+    "hlink",
+    "id",
+    "informaddress",
+    "informtel",
+    "lat",
+    "lng",
+    "org_Text",
+    "servItem",
+    "servTime"
+  ]
 }
