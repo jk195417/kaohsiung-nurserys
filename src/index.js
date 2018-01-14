@@ -79,6 +79,19 @@ const app = new Vue({
         }
       })
       return nurserys
+    },
+    mapCenter: function() {
+      const result = {
+        lat: 0,
+        lng: 0
+      }
+      this.districtNurserys.forEach((nursery) => {
+        result["lat"] += parseFloat(nursery["lat"])
+        result["lng"] += parseFloat(nursery["lng"])
+      })
+      result["lat"] = result["lat"] / this.districtNurserys.length
+      result["lng"] = result["lng"] / this.districtNurserys.length
+      return result
     }
   },
   created: function() {
