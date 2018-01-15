@@ -1,5 +1,5 @@
 export default {
-  template: '#nursery',
+  template: "#nursery",
   props: [
     "district",
     "dataOrg",

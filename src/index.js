@@ -7,7 +7,6 @@ import Vue from 'vue/dist/vue.esm.js'
 // import css
 import './css/index.scss'
 
-// js code
 // google map
 window.initMap = function() {
   const kaohsiung = {
@@ -19,6 +18,7 @@ window.initMap = function() {
     center: kaohsiung
   })
 }
+
 // vue
 import nursery from './js/nursery.js'
 const app = new Vue({
