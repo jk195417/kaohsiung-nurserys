@@ -6,30 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>高雄市托育嬰服務查詢</title>
+  <!-- google map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI" charset="utf-8"></script>
   <!-- main js -->
   <script src="./index.js" charset="utf-8"></script>
   <!-- import html template -->
   <link rel="import" href="./tpl/nurserys.html" onload="loadTemplate(this);">
   <link rel="import" href="./tpl/nursery.html" onload="loadTemplate(this);initVue();">
-  <!-- google map -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRf_4FohphQwLdc695Fw9Ptja2aDdGVqI&callback=initMap" defer charset="utf-8"></script>
 </head>
 
 <body>
   <nav class="navbar navbar-light bg-light">
     <span class="navbar-brand mb-0 h1">高雄市托育嬰服務查詢</span>
   </nav>
-  <div class="row pt-2">
-    <div class="col">
-      <main>
-        <div id="app">
-          <nurserys></nurserys>
+  <div class="container-fluid">
+    <div class="row pt-2">
+      <div class="col">
+        <main>
+          <div id="app">
+            <nurserys></nurserys>
+          </div>
+        </main>
+      </div>
+      <div class="col">
+        <div class="embed-responsive embed-responsive-1by1">
+          <div id="map" class="embed-responsive-item"></div>
         </div>
-      </main>
-    </div>
-    <div class="col">
-      <div class="embed-responsive embed-responsive-1by1">
-        <div id="map" class="embed-responsive-item"></div>
       </div>
     </div>
   </div>

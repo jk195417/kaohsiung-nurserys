@@ -5,7 +5,14 @@ export default {
   data: function() {
     return {
       nurserys: [],
-      district: "全部"
+      district: "全部",
+      map: new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: {
+          lat: 22.665768464,
+          lng: 120.32489392799998
+        }
+      })
     }
   },
   components: {
@@ -21,6 +28,7 @@ export default {
           const nurserys = JSON.parse(data);
           nurserys.forEach((nursery) => {
             nursery["district"] = self.getDistrict(nursery)
+            nursery["marker"] = self.getMarker(nursery)
             self.nurserys.push(nursery)
           })
         }
@@ -34,6 +42,16 @@ export default {
         result = matched[0].substr(3, 3)
       }
       return result
+    },
+    getMarker: function(nursery) {
+      let result = new google.maps.Marker({
+        title: nursery.org_Text,
+        position: {
+          lat: parseFloat(nursery.lat),
+          lng: parseFloat(nursery.lng)
+        }
+      })
+      return result;
     }
   },
   computed: {
@@ -60,18 +78,29 @@ export default {
       })
       return nurserys
     },
-    mapCenter: function() {
-      const result = {
-        lat: 0,
-        lng: 0
-      }
+    mapLatLngBounds: function() {
+      let bounds = new google.maps.LatLngBounds()
       this.districtNurserys.forEach((nursery) => {
-        result["lat"] += parseFloat(nursery["lat"])
-        result["lng"] += parseFloat(nursery["lng"])
+        let lat = parseFloat(nursery["lat"])
+        let lng = parseFloat(nursery["lng"])
+        let location = new google.maps.LatLng(lat, lng)
+        bounds.extend(location)
       })
-      result["lat"] = result["lat"] / this.districtNurserys.length
-      result["lng"] = result["lng"] / this.districtNurserys.length
-      return result
+      return bounds;
+    }
+  },
+  watch: {
+    districtNurserys: function(newNurserys, oldNurserys) {
+      // set markers
+      oldNurserys.forEach((nursery) => {
+        nursery.marker.setMap(null)
+      })
+      newNurserys.forEach((nursery) => {
+        nursery.marker.setMap(this.map)
+      })
+      // move map to markers's center and zoom
+      this.map.fitBounds(this.mapLatLngBounds)
+      this.map.panToBounds(this.mapLatLngBounds)
     }
   },
   mounted: function() {

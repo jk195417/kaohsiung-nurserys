@@ -13,6 +13,7 @@ export default {
     "lng",
     "org_Text",
     "servItem",
-    "servTime"
+    "servTime",
+    "marker"
   ]
 }
