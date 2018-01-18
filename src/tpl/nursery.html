@@ -1,6 +1,6 @@
 <template id="nursery">
   <div class="card">
-    <a data-toggle="collapse" :href="'#nursery-collapse-'+id">
+    <a data-toggle="collapse" :href="'#nursery-collapse-'+id" @click="$emit('click')">
       <h5 class="card-header d-flex align-items-baseline">
         <span class="text-muted small">{{district}}</span>
         <span class="ml-2">{{org_Text}}</span>

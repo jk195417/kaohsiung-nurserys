@@ -11,8 +11,8 @@
       </form>
     </div>
     <div class="card mt-2" style="height: 70vh;">
-      <div class="card-body" style="max-height: 100%; overflow: scroll;">
-        <nursery v-for="(nursery, index) in districtNurserys" :key="nursery.id" v-bind="nursery"></nursery>
+      <div id="accordion" class="card-body" style="max-height: 100%; overflow: scroll;">
+        <nursery v-for="(nursery, index) in districtNurserys" :key="nursery.id" v-bind="nursery" v-on:click="setPicked(index)"></nursery>
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ export default {
   template: "#nurserys",
   data: function() {
     return {
+      picked: null,
       nurserys: [],
       district: "全部",
       map: new google.maps.Map(document.getElementById('map'), {
@@ -57,6 +58,13 @@ export default {
       // move map to markers's center and zoom
       this.map.fitBounds(this.mapLatLngBounds)
       this.map.panToBounds(this.mapLatLngBounds)
+    },
+    setPicked: function(index) {
+      if (this.picked === index) {
+        this.picked = null
+      } else {
+        this.picked = index
+      }
     }
   },
   computed: {
@@ -85,16 +93,26 @@ export default {
     },
     mapLatLngBounds: function() {
       let bounds = new google.maps.LatLngBounds()
-      this.districtNurserys.forEach((nursery) => {
-        let lat = parseFloat(nursery["lat"])
-        let lng = parseFloat(nursery["lng"])
+      if (this.picked !== null) {
+        let lat = parseFloat(this.districtNurserys[this.picked].lat)
+        let lng = parseFloat(this.districtNurserys[this.picked].lng)
         let location = new google.maps.LatLng(lat, lng)
         bounds.extend(location)
-      })
+      } else {
+        this.districtNurserys.forEach((nursery) => {
+          let lat = parseFloat(nursery["lat"])
+          let lng = parseFloat(nursery["lng"])
+          let location = new google.maps.LatLng(lat, lng)
+          bounds.extend(location)
+        })
+      }
       return bounds;
     }
   },
   watch: {
+    district: function() {
+      this.picked = null
+    },
     districtNurserys: function(newNurserys, oldNurserys) {
       // set markers
       oldNurserys.forEach((nursery) => {
@@ -104,6 +122,19 @@ export default {
         nursery.marker.setMap(this.map)
       })
       this.fitMap()
+    },
+    picked: function(index) {
+      this.fitMap()
+      let streetView = this.map.getStreetView()
+      if (index !== null) {
+        let lat = parseFloat(this.districtNurserys[index].lat)
+        let lng = parseFloat(this.districtNurserys[index].lng)
+        let location = new google.maps.LatLng(lat, lng)
+        streetView.setPosition(location)
+        streetView.setVisible(true)
+      } else {
+        streetView.setVisible(false)
+      }
     }
   },
   mounted: function() {
