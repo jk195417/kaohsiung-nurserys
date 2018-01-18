@@ -52,6 +52,11 @@ export default {
         }
       })
       return result;
+    },
+    fitMap: function() {
+      // move map to markers's center and zoom
+      this.map.fitBounds(this.mapLatLngBounds)
+      this.map.panToBounds(this.mapLatLngBounds)
     }
   },
   computed: {
@@ -98,9 +103,7 @@ export default {
       newNurserys.forEach((nursery) => {
         nursery.marker.setMap(this.map)
       })
-      // move map to markers's center and zoom
-      this.map.fitBounds(this.mapLatLngBounds)
-      this.map.panToBounds(this.mapLatLngBounds)
+      this.fitMap()
     }
   },
   mounted: function() {
